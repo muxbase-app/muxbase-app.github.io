@@ -31,8 +31,12 @@ jobs:
 
       - name: Configure GitHub Pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
-        with:
-          static_site_generator: next
+
+      # next.config.ts is the single source of truth for the static export.
+      # Asking configure-pages to modify Next.js config creates a CommonJS
+      # next.config.js because the action does not load TypeScript configs.
+      - name: Verify Pages did not replace the Next.js configuration
+        run: test ! -e next.config.js
 
       - name: Install dependencies
         run: npm ci
